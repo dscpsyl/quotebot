@@ -36,4 +36,4 @@ Contributors
 </a>
 
 
-**Note:** *This project is unmaintained. You can submit issues and requests. However, they will be resolved at times only convient and available to me.*
+**Note:** *This project is unmaintained and many expected features of a discord bot has not been implemented yet. You can submit issues and requests. However, they will be resolved at times only convient and available to me.*
