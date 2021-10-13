@@ -1,5 +1,6 @@
 QuoteBot
 ==========
+![GitHub](https://img.shields.io/github/license/dscpsyl/quotebot)
 
 This is a simpel Discord Bot that takes an input and stores it with data in a MongoDB for future searches and to forever hold your favorite memories with your friends. 
 
