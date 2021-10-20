@@ -7,6 +7,12 @@
 >`Fixed` for any bug fixes.
 >`Security` in case of vulnerabilities.
 
+## v1.0.1
+
+### Changed
+- Cleaned up settings variables 
+- Cleaned up comments
+
 ## v1.0.0
 
 ### Added 
