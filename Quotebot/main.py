@@ -10,9 +10,7 @@ with open("settings.json", "r") as settingsFile:
     settings = json.load(settingsFile)
 
 #Loads Bot
-# botPrefix = settings["prefix"]
 bot = commands.Bot(command_prefix=settings["prefix"])
-# TOKEN = settings["BotToken"]
 
 #Loads db
 myclient = pymongo.MongoClient(settings["mongoClientID"])
