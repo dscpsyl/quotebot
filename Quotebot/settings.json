@@ -1,5 +1,10 @@
 {
     "prefix": "\"",
-    "BotToken": "TOKEN",
-    "ChannelID": ""
+    "BotToken": "",
+    "GuildName": "",
+    "ChannelID": "",
+
+    "mongoClientID":"mongodb://localhost:27017/",
+    "databaseName": "",
+    "collectionName": ""
 }
