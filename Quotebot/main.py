@@ -7,6 +7,8 @@ import os
 from discord.ext import commands
 from datetime import date, datetime
 
+from pymongo.message import delete
+
 #Loads Settings
 with open("settings.json", "r") as settingsFile:
     settings = json.load(settingsFile)
@@ -25,7 +27,7 @@ for doc in mycol.find({}, {"_id":1}).sort("_id", -1).limit(1):
 @bot.event
 async def on_ready():
     print(f'{bot.user} is connected and has the db of: {str(str(mydb).split(" ")[-1:])[2:-3]} with collection: {str(str(mycol).split(" ")[-1:])[2:-3]}')
-    print(f"Initalized no: {doc}")
+    print(f"Initalized no: {no}")
 
 @bot.command(name="q", help="Quote's the message you sent")
 async def quote(ctx):
@@ -42,13 +44,9 @@ async def quote(ctx):
 
     #Checks to find a single author and their username
     authorList = ctx.message.mentions
-    if len(authorList) > 1:
+    if len(authorList) > 1 or len(authorList) ==0:
         await ctx.message.delete()
         await ctx.send("Error: Please only specify one author at this time.", delete_after=5)
-        return
-    elif len(authorList) == 0:
-        await ctx.message.delete()
-        await ctx.send("Error: Please only specify an author.", delete_after=5)
         return
     author = authorList[0]
     sender = ctx.message.author
@@ -73,12 +71,28 @@ async def quote(ctx):
     mycol.insert_one({"_id" : no, "quote" : quoteReturn, "author" : str(author), "sender" : str(sender), "time" : str(time), "day" : str(today), "url" : str(jumpURL)})
     no += 1
     
-    
+
+#? Args0 will be option of edit | args1 will be quote to edit
 @bot.command(name="e", help="Edits previous quotes in database")
 async def edit(ctx, *args):
     if len(args) == 0:
-        await ctx.send("Error: No arguments supplied. Please see documentation for help.", delete_after=5)
+        await ctx.message.delete()
+        await ctx.send("Error: No arguments supplied. The current available options are: |author|.", delete_after=5)
+        return
+    
+
+    if args[0] == "author":
+        if len(args) != 3:
+            await ctx.message.delete()
+            await ctx.send("Error: The arguments are incorrect. The format is: \"e author [Quote Index No.] [New Author]", delete_after=5)
+            return
         
+        for entry in mycol.find({"_id":int(args[1])}):
+            print(entry['author'])
+        await ctx.message.delete()
+    else:
+        await ctx.message.delete()
+        await ctx.send("Error: That is not a current valid editing opiton", delete_after=5)
         
 
 #Finds previous quote by index no. 
