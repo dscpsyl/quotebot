@@ -72,6 +72,9 @@ async def quote(ctx):
     mycol.insert_one({"_id" : no, "quote" : quoteReturn, "author" : str(author), "sender" : str(sender), "time" : str(time), "day" : str(today), "url" : str(jumpURL)})
     no += 1
     
+    #print to console
+    print(f"Added quote no: ***{no}*** to database. `{str(jumpURL)}`")
+    
 
 #? Args0 will be option of edit | args1 will be quote to edit
 @bot.command(name="e", help="Edits previous quotes in database")
