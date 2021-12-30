@@ -51,12 +51,11 @@ async def quote(ctx):
         return
     author = authorList[0]
     sender = ctx.message.author
-    jumpURL = ctx.message.jump_url
 
     #Finds author userid so it can be mentioned
     authorID = quote[quote.find("<"):quote.find(">")+1]
 
-    #Get's current year for citation
+    #Get's current year for citationå
     today = date.today()
     time = datetime.now()
     time = time.strftime("%H:%M:%S")
@@ -64,6 +63,7 @@ async def quote(ctx):
 
     #Sends formated message & cleans up
     await ctx.send(str(no) + ": "'***"'+str(quoteReturn)+'"'+".*** `(`"+str(authorID)+"`, "+str(year)+")`")
+    jumpURL = ctx.channel.last_message.jump_url
     await ctx.message.delete()
     #Invisible character for double spacing
     await ctx.send("\u3164")
