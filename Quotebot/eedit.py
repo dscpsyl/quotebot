@@ -3,12 +3,6 @@ def orgMsgFind(mycol,idxNo):
     for entry in mycol.find({"_id":int(idxNo)}):
         return entry['url'].split('/')[-1]
 
-async def updateDatabase(ctx,mycol,field,data,*args):
-    result = mycol.update_one({"_id":int(args[1])},{"$set":{field:str(data)}})
-    if result.acknowledged:
-        await ctx.send(f"Updated the {field} of quote {str(args[1])} to {str(data)}", delete_after=5)
-    else:
-        await ctx.send("Error: Failed to update quote.")    
 
 
 #Finds previous quote by index no. 
@@ -27,8 +21,13 @@ async def authorEdit(ctx,mycol,*args):
     newAuthorID = ctx.message.content[ctx.message.content.find('<'):ctx.message.content.find('>')+1]
     newAuthor = ctx.message.mentions[0]
         
-    updateDatabase(ctx, mycol,"author",newAuthor,*args)
-
+    #Updates Database
+    result = mycol.update_one({"_id":int(args[1])},{"$set":{"author":str(newAuthor)}})
+    if result.acknowledged:
+        await ctx.send(f"Updated the author of quote {str(args[1])} to {str(newAuthor)}", delete_after=5)
+    else:
+        await ctx.send("Error: Failed to update quote.")
+        
     #Update Visible Book 
     quoteID = orgMsgFind(mycol,args[1])
     orgMsg = await ctx.channel.fetch_message(quoteID) 
@@ -45,12 +44,19 @@ async def quoteEdit(ctx,mycol,*args):
             return    
     
     newQuote = str(args[2])
+
+    result = mycol.update_one({"_id":int(args[1])},{"$set":{"quote":str(newQuote)}})
+    if result.acknowledged:
+        await ctx.send(f"Updated the quote of quote {str(args[1])} to {str(newQuote)}", delete_after=5)
+    else:
+        await ctx.send("Error: Failed to update quote.")
     
-    updateDatabase(ctx,mycol,"quote",newQuote,*args)
-    
-    
-    
-    
+    quoteID = orgMsgFind(mycol,args[1])
+    orgMsg = await ctx.channel.fetch_message(quoteID) 
+    quotePOS = [pos for pos, char in enumerate(orgMsg.content) if char == '"']
+    oldQuote = orgMsg.content[quotePOS[0]+1:quotePOS[1]]
+    newMsg = str(orgMsg.content).replace(oldQuote,newQuote)
+    await orgMsg.edit(content=newMsg)   
     
     await ctx.message.delete()
 
