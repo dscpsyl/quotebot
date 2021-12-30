@@ -1,10 +1,10 @@
 {
     "prefix": "\"",
-    "BotToken": "",
-    "GuildName": "",
+    "BotToken": "ODA5ODY5Nzc5Mzg4OTg5NDgx.YCbYAg.leNrKt2IdSJOAo1fyPfx8qeTdOM",
+    "GuildName": "Testing",
     "ChannelID": "",
 
     "mongoClientID":"mongodb://localhost:27017/",
-    "databaseName": "",
-    "collectionName": ""
+    "databaseName": "QuoteBot",
+    "collectionName": "quotes"
 }
