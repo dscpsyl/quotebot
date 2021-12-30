@@ -1,3 +1,5 @@
+# "brew services start/stop mongodb-community@5.0"
+# mongsh command: "mongo"
 import discord
 import json
 import pymongo
@@ -32,8 +34,8 @@ async def quote(ctx):
     quote = ctx.message.content[3:]
     quotePOS = [pos for pos, char in enumerate(quote) if char == '"']
     if len(quotePOS) != 2:
-        await ctx.send("Error: Can't Find Quote. Please surround your quote with quotation marks.")
         await ctx.message.delete()
+        await ctx.send("Error: Can't Find Quote. Please surround your quote with quotation marks.", delete_after=5)
         return
 
     quoteReturn = quote[quotePOS[0]+1:quotePOS[1]]
@@ -41,12 +43,12 @@ async def quote(ctx):
     #Checks to find a single author and their username
     authorList = ctx.message.mentions
     if len(authorList) > 1:
-        await ctx.send("Error: Please only specify one author at this time.")
         await ctx.message.delete()
+        await ctx.send("Error: Please only specify one author at this time.", delete_after=5)
         return
     elif len(authorList) == 0:
-        await ctx.send("Error: Please only specify an author.")
         await ctx.message.delete()
+        await ctx.send("Error: Please only specify an author.", delete_after=5)
         return
     author = authorList[0]
     sender = ctx.message.author
@@ -70,6 +72,21 @@ async def quote(ctx):
     #Write to Database
     mycol.insert_one({"_id" : no, "quote" : quoteReturn, "author" : str(author), "sender" : str(sender), "time" : str(time), "day" : str(today), "url" : str(jumpURL)})
     no += 1
+    
+    
+@bot.command(name="e", help="Edits previous quotes in database")
+async def edit(ctx, *args):
+    if len(args) == 0:
+        await ctx.send("Error: No arguments supplied. Please see documentation for help.", delete_after=5)
+        
+        
+
+#Finds previous quote by index no. 
+#gets revelant jumurl from database
+#gets what to edit from arguments 
+#edits the content on both the database and the discord text channel 
+
+
 
 #!Not Functional
 @bot.command(name="p", help="Set the prefix of quote")
@@ -87,12 +104,6 @@ async def channelSetting(ctx):
 async def setUp(ctx):
     pass
     #create quotebook channel if it doens't exist and rememebr channel id in settings
-
-#!Not Functional
-@bot.command(name="f", help="How to format the quote (APA, MAL, Chicago, etc.)")
-async def formatSetting(ctx):
-    pass
-    #define different quoting styles
 
 #!Not Functional
 @bot.command(name="s", help="Searches through database for old quotes")
