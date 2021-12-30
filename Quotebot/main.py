@@ -73,7 +73,7 @@ async def quote(ctx):
     no += 1
     
     #print to console
-    print(f"Added quote no: ***{no}*** to database. {str(jumpURL)}")
+    print(f"Added quote no: ***{no}*** to database. `{str(jumpURL)}`")
     
 
 #? Args0 will be option of edit | args1 will be quote to edit
