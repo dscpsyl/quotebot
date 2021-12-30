@@ -7,6 +7,11 @@
 >`Fixed` for any bug fixes.
 >`Security` in case of vulnerabilities.
 
+## v1.3.1
+
+### Added 
+- Console Logging
+
 ## v1.3.0
 
 ### Added
