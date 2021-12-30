@@ -86,14 +86,6 @@ async def edit(ctx, *args):
     else:
         await ctx.message.delete()
         await ctx.send("Error: That is not a current valid editing opiton", delete_after=5)
-        
-
-#Finds previous quote by index no. 
-#gets revelant jumurl from database
-#gets what to edit from arguments 
-#edits the content on both the database and the discord text channel 
-
-
 
 #!Not Functional
 @bot.command(name="p", help="Set the prefix of quote")

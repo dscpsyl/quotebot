@@ -4,6 +4,12 @@ def orgMsgFind(mycol,idxNo):
         return entry['url'].split('/')[-1]
 
 
+#Finds previous quote by index no. 
+#gets revelant jumurl from database
+#gets what to edit from arguments 
+#edits the content on both the database and the discord text channel 
+
+
 async def authorEdit(ctx,mycol,*args):
     if len(args) != 3:
             await ctx.message.delete()
@@ -23,8 +29,6 @@ async def authorEdit(ctx,mycol,*args):
         
     #Update Visible Book 
     quoteID = orgMsgFind(mycol,args[1])
-    # for entry in mycol.find({"_id":int(args[1])}):
-    #     quoteID = entry['url'].split('/')[-1]
     orgMsg = await ctx.channel.fetch_message(quoteID) 
     oldAuthorID = orgMsg.content[orgMsg.content.find('<'):orgMsg.content.find('>')+1]
     newMsg = str(orgMsg.content).replace(oldAuthorID,newAuthorID)
