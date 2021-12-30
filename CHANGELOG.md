@@ -7,6 +7,11 @@
 >`Fixed` for any bug fixes.
 >`Security` in case of vulnerabilities.
 
+## v1.3.0
+
+### Added
+- Ability to change prefix
+
 ## v1.2.1
 
 ### Changed
