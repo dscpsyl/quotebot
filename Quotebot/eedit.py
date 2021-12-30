@@ -1,4 +1,7 @@
-
+#fetches data for the old message to be edited 
+def orgMsgFind(mycol,idxNo):
+    for entry in mycol.find({"_id":int(idxNo)}):
+        return entry['url'].split('/')[-1]
 
 
 async def authorEdit(ctx,mycol,*args):
@@ -19,8 +22,9 @@ async def authorEdit(ctx,mycol,*args):
         await ctx.send("Error: Failed to update quote.")
         
     #Update Visible Book 
-    for entry in mycol.find({"_id":int(args[1])}):
-        quoteID = entry['url'].split('/')[-1]
+    quoteID = orgMsgFind(mycol,args[1])
+    # for entry in mycol.find({"_id":int(args[1])}):
+    #     quoteID = entry['url'].split('/')[-1]
     orgMsg = await ctx.channel.fetch_message(quoteID) 
     oldAuthorID = orgMsg.content[orgMsg.content.find('<'):orgMsg.content.find('>')+1]
     newMsg = str(orgMsg.content).replace(oldAuthorID,newAuthorID)
