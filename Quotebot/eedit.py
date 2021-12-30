@@ -1,3 +1,6 @@
+
+
+
 async def authorEdit(ctx,mycol,*args):
     if len(args) != 3:
             await ctx.message.delete()
@@ -15,13 +18,12 @@ async def authorEdit(ctx,mycol,*args):
     else:
         await ctx.send("Error: Failed to update quote.")
         
-    #Update Visible Book
-        
-        
-        
+    #Update Visible Book 
     for entry in mycol.find({"_id":int(args[1])}):
-        print(entry['author'])
-          
-          
-                  
+        quoteID = entry['url'].split('/')[-1]
+    orgMsg = await ctx.channel.fetch_message(quoteID) 
+    oldAuthorID = orgMsg.content[orgMsg.content.find('<'):orgMsg.content.find('>')+1]
+    newMsg = str(orgMsg.content).replace(oldAuthorID,newAuthorID)
+    await orgMsg.edit(content=newMsg)
+               
     await ctx.message.delete()
