@@ -6,6 +6,7 @@ import pymongo
 import os
 from discord.ext import commands
 from datetime import date, datetime
+from eedit import *
 
 from pymongo.message import delete
 
@@ -79,17 +80,9 @@ async def edit(ctx, *args):
         await ctx.message.delete()
         await ctx.send("Error: No arguments supplied. The current available options are: |author|.", delete_after=5)
         return
-    
 
     if args[0] == "author":
-        if len(args) != 3:
-            await ctx.message.delete()
-            await ctx.send("Error: The arguments are incorrect. The format is: \"e author [Quote Index No.] [New Author]", delete_after=5)
-            return
-        
-        for entry in mycol.find({"_id":int(args[1])}):
-            print(entry['author'])
-        await ctx.message.delete()
+        await authorEdit(ctx,mycol,*args)
     else:
         await ctx.message.delete()
         await ctx.send("Error: That is not a current valid editing opiton", delete_after=5)
