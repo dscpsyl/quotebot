@@ -78,7 +78,7 @@ async def quote(ctx):
 async def edit(ctx, *args):
     if len(args) == 0:
         await ctx.message.delete()
-        await ctx.send("Error: No arguments supplied. The current available options are: |author|.", delete_after=5)
+        await ctx.send("Error: No arguments supplied. The current available options are: |author|, |quote|.", delete_after=5)
         return
 
     if args[0] == "author":
