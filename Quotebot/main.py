@@ -95,21 +95,9 @@ async def prefixSetting(ctx, *args):
     pass
 
 #!Not Functional
-@bot.command(name="c", help="Set's the channel ID of where the quotes are")
-async def channelSetting(ctx):
-    pass
-    #Channel ID
-
-#!Not Functional
 @bot.command(name="o", help="Initial Setup when the bot joins")
 async def setUp(ctx):
     pass
     #create quotebook channel if it doens't exist and rememebr channel id in settings
-
-#!Not Functional
-@bot.command(name="s", help="Searches through database for old quotes")
-async def formatSetting(ctx):
-    pass
-    #search database
 
 bot.run(settings["BotToken"])

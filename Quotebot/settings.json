@@ -1,7 +1,7 @@
 {
     "prefix": "\"",
-    "BotToken": "",
-    "GuildName": "",
+    "BotToken": "ODA5ODY5Nzc5Mzg4OTg5NDgx.YCbYAg.uZOCftHhIajUH9V0ql7rAGmoUvY",
+    "GuildName": "Testing",
     "ChannelID": "",
 
     "mongoClientID":"mongodb://localhost:27017/",
