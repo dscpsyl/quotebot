@@ -7,6 +7,17 @@
 >`Fixed` for any bug fixes.
 >`Security` in case of vulnerabilities.
 
+## v1.1.0
+
+### Added
+- Ability to edit authors from past quotes
+
+### Changed
+- Backend structures
+
+### Fixed
+- jumpURL corrections
+
 ## v1.0.1
 
 ### Changed
