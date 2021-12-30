@@ -7,6 +7,16 @@
 >`Fixed` for any bug fixes.
 >`Security` in case of vulnerabilities.
 
+## v1.2.1
+
+### Changed
+- Backend structures
+
+## v1.2.0
+
+### Added
+- Ability to edit past quotes 
+
 ## v1.1.0
 
 ### Added
