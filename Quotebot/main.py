@@ -78,7 +78,7 @@ async def quote(ctx):
 async def edit(ctx, *args):
     if len(args) == 0:
         await ctx.message.delete()
-        await ctx.send("Error: No arguments supplied. The current available options are: |author|.", delete_after=5)
+        await ctx.send("Error: No arguments supplied. The current available options are: |author|, |quote|.", delete_after=5)
         return
 
     if args[0] == "author":
@@ -89,27 +89,33 @@ async def edit(ctx, *args):
         await ctx.message.delete()
         await ctx.send("Error: That is not a current valid editing opiton", delete_after=5)
 
-#!Not Functional
+
 @bot.command(name="p", help="Set the prefix of quote")
 async def prefixSetting(ctx, *args):
-    pass
+    if len(args) == 0:
+        await ctx.message.delete()
+        await ctx.send("Error: No arguments supplied.")
+        return
+    elif len(args) != 1:
+        await ctx.message.delete()
+        await ctx.send("Error: Please input only one prefix")
+        return
 
-#!Not Functional
-@bot.command(name="c", help="Set's the channel ID of where the quotes are")
-async def channelSetting(ctx):
-    pass
-    #Channel ID
-
+    if args[0] != "":
+        bot.command_prefix = args[0]
+        await ctx.send(f"Updated prefix to {args[0]}!", delete_after=5)
+        
+        with open("settings.json", "r+") as settingsFile:
+            settingsData = json.load(settingsFile)
+            settingsData["prefix"] = str(args[0])
+            settingsFile.seek(0)
+            json.dump(settingsData,settingsFile, indent=4)
+            settingsFile.truncate()
+        
 #!Not Functional
 @bot.command(name="o", help="Initial Setup when the bot joins")
 async def setUp(ctx):
     pass
     #create quotebook channel if it doens't exist and rememebr channel id in settings
-
-#!Not Functional
-@bot.command(name="s", help="Searches through database for old quotes")
-async def formatSetting(ctx):
-    pass
-    #search database
 
 bot.run(settings["BotToken"])
