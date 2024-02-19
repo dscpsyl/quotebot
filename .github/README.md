@@ -71,7 +71,7 @@ You must have a Discord app key and token ready for your bot before you begin. Y
 You also must have a presistant instance of MongoDB installed and running somewhere that can be connected to. The script assumes it is on the local machine with the default port configuations. 
 
 #### Python Dependencies
-1. python3.7>=
+1. python3.11>=
 2. discordpy
 3. pymongo
 4. json
