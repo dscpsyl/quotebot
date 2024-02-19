@@ -79,7 +79,7 @@ You also must have a presistant instance of MongoDB installed and running somewh
 ### Installation
 
 1. Start by cloning this repository
-2. Fill out the `settingsex.json` file with the required information and change it to `settings.json`
+2. Fill out the `settings_ex.json` file with the required information and change it to `settings.json`
 3. Start up the MongoDB instance
 4. We recomend creating a python venv to contain the dependencies of this project.
 5. Enter the `Quotebot` folder and run `python3 main.py` 
@@ -92,7 +92,7 @@ You also must have a presistant instance of MongoDB installed and running somewh
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-The quote bot will automatically be looking for messages in the channel that you specify. The format should be "[quote text] [mention]" with only a single mention. The quot ebot will automatically handle the quoting and database insertion.
+The quote bot will automatically be looking for messages in the channel that you specify. The format should be "[quote text] [mention]" with only a single mention. The quote bot will automatically handle the quoting and database insertion.
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
