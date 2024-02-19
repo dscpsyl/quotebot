@@ -7,6 +7,18 @@
 >`Fixed` for any bug fixes.
 >`Security` in case of vulnerabilities.
 
+
+## v2.0.0
+
+### Added
+- Ability to change the bot's listening channel
+- Logging for all commands to files and stdout
+
+### Changed
+- Bot now listens to a specific channel for quotes instead of commands
+
+###
+
 ## v1.3.1
 
 ### Added 
