@@ -43,6 +43,13 @@ async def on_ready():
 
 @bot.event
 async def on_message(message: discord.Message):
+    
+    # Check for command prefixes and process commands
+    prefix = settings["prefix"]
+    if message.content.startswith(prefix):
+        await bot.process_commands(message)
+        return
+    
     global no #global quote number
     
     # Check of the message is in the channel we are looking for
