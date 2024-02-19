@@ -116,8 +116,10 @@ async def edit(ctx, *args):
 
     if args[0] == "author":
         await authorEdit(ctx,mycol,*args)
+        log.info(f"Author edit: {args[1]}")
     elif args[0] == "quote":
         await quoteEdit(ctx,mycol,*args)
+        log.info(f"Quote edit: {args[1]}")
     else:
         await ctx.message.delete()
         await ctx.send("Error: That is not a current valid editing opiton", delete_after=5)
