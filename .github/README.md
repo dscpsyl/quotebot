@@ -92,14 +92,7 @@ You also must have a presistant instance of MongoDB installed and running somewh
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-The format for a command is `{Prefix} "{QUOTE}" {Tag}`. The default prefix of the bot is `"q`.
-<br />
-
-Ex. 
-
-```
-"q "This is my quote" @userinmyserver
-```
+The quote bot will automatically be looking for messages in the channel that you specify. The format should be "[quote text] [mention]" with only a single mention. The quot ebot will automatically handle the quoting and database insertion.
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

@@ -4,79 +4,100 @@ import discord
 import json
 import pymongo
 import os
+import logging as log
+
 from discord.ext import commands
 from datetime import date, datetime
 from eedit import *
 
 #Loads Settings
 with open("settings.json", "r") as settingsFile:
-    settings = json.load(settingsFile)
+    settings: dict = json.load(settingsFile)
+    
+#Logging
+log.basicConfig(level=log.INFO)
     
 # Set the premissions for the bot
-intents = discord.Intents.default()
+intents: discord.Intents = discord.Intents.default()
 intents.message_content = True
 
 #Loads Bot
 bot = commands.Bot(command_prefix=settings["prefix"], intents=intents, help_command=None)
 
 #Loads db
-myclient = pymongo.MongoClient(settings["mongoClientID"])
+myclient: pymongo.MongoClient = pymongo.MongoClient(settings["mongoClientID"])
 mydb = myclient[settings["databaseName"]]
 mycol = mydb[settings["collectionName"]]
 
+# Set the quote number to the last quote number in the database
+no: int = 1
 for doc in mycol.find({}, {"_id":1}).sort("_id", -1).limit(1):
-    no = doc["_id"] + 1
+    no: int = doc["_id"] + 1
 
 @bot.event
 async def on_ready():
-    print(f'{bot.user} is connected and has the db of: {str(str(mydb).split(" ")[-1:])[2:-3]} with collection: {str(str(mycol).split(" ")[-1:])[2:-3]}')
-    print(f"Initalized no: {no}")
+    global no
+    log.info(f'{bot.user} is connected and has the db of: {str(str(mydb).split(" ")[-1:])[2:-3]} with collection: {str(str(mycol).split(" ")[-1:])[2:-3]}')
+    log.info(f"Initalized quote number: {no}")
     
 
-@bot.command(name="q", help="Quote's the message you sent")
-async def quote(ctx):
-    global no
-    #Checks to find quote
-    quote = ctx.message.content[3:]
-    quotePOS = [pos for pos, char in enumerate(quote) if char == '"']
-    if len(quotePOS) != 2:
-        await ctx.message.delete()
-        await ctx.send("Error: Can't Find Quote. Please surround your quote with quotation marks.", delete_after=5)
+@bot.event
+async def on_message(message: discord.Message):
+    global no #global quote number
+    
+    # Check of the message is in the channel we are looking for
+    channelWatch = settings["ChannelID"]
+    if(str(message.channel.id) != channelWatch):
         return
 
-    quoteReturn = quote[quotePOS[0]+1:quotePOS[1]]
-
-    #Checks to find a single author and their username
-    authorList = ctx.message.mentions
-    if len(authorList) > 1 or len(authorList) ==0:
-        await ctx.message.delete()
-        await ctx.send("Error: Please only specify one author at this time.", delete_after=5)
+    # Check if the message is from the bot
+    if message.author == bot.user:
         return
-    author = authorList[0]
-    sender = ctx.message.author
-
-    #Finds author userid so it can be mentioned
-    authorID = quote[quote.find("<"):quote.find(">")+1]
-
+    
+    # Check to see if there is one mention of an author
+    authorList: list = message.mentions
+    if len(authorList) > 1 or len(authorList) == 0:
+        await message.delete()
+        await message.channel.send(f"Error: Please only specify one author for this quote at this time we found {len(authorList)}: {[user.name for user in authorList]} .", delete_after=30)
+        log.warning(f"{message.author} tried to add a quote with {len(authorList)} authors: {[user.name for user in authorList]} and content: {message.content}")
+        return
+    quoteAuthor: discord.Member = authorList[0]
+    quoteSender: discord.User | discord.Member = message.author
+    
+    # Get a mentionable string for the author
+    authorMentionString: str = quoteAuthor.mention
+    
+    # Get the content of the message and make sure the citation is at the end of the message
+    quoteContent: str | list = message.content
+    quoteContent = quoteContent.split(" ")
+    if quoteContent[-1] != authorMentionString:
+        await message.delete()
+        await message.channel.send(f"Error: Please make sure to mention the author at the end of the quote.", delete_after=30)
+        log.warning(f"{message.author} tried to add a quote without mentioning the author at the end of the quote: {quoteContent}")
+        return
+    
+    quote: str = " ".join(quoteContent[:-1])
+    
     #Get's current year for citationå
-    today = date.today()
-    time = datetime.now()
+    today: date = date.today()
+    time: datetime | str = datetime.now()
     time = time.strftime("%H:%M:%S")
-    year = today.year
+    year: int = today.year
 
-    #Sends formated message & cleans up
-    await ctx.send(str(no) + ": "'***"'+str(quoteReturn)+'"'+".*** `(`"+str(authorID)+"`, "+str(year)+")`")
-    jumpURL = ctx.channel.last_message.jump_url
-    await ctx.message.delete()
-    #Invisible character for double spacing
-    await ctx.send("\u3164")
+    # Sends formatted message & cleans up
+    fullQuote = str(no) + ": "'***"'+ quote +'"'+".*** `(`"+ authorMentionString +"`, "+str(year)+")`"
+    quote_message = await message.channel.send(fullQuote)
+    jumpURL: str = quote_message.jump_url
+    await message.delete()
+    # Invisible character for double spacing
+    await message.channel.send("\u3164")
 
-    #Write to Database
-    mycol.insert_one({"_id" : no, "quote" : quoteReturn, "author" : str(author), "sender" : str(sender), "time" : str(time), "day" : str(today), "url" : str(jumpURL)})
+    # Write to Database
+    mycol.insert_one({"_id" : no, "quote" : quote, "author" : str(quoteAuthor), "sender" : str(quoteSender), "time" : str(time), "day" : str(today), "url" : str(jumpURL)})
     no += 1
     
     #print to console
-    print(f"Added quote no: ***{no}*** to database. `{str(jumpURL)}`")
+    log.info(f"Added quote no: {no} to database: \"{quote}\", {quoteAuthor.name} from {quoteSender.name}. `{str(jumpURL)}`")
     
 
 #? Args0 will be option of edit | args1 will be quote to edit
