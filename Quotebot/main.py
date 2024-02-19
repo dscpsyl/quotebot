@@ -100,10 +100,11 @@ async def on_message(message: discord.Message):
 
     # Write to Database
     mycol.insert_one({"_id" : no, "quote" : quote, "author" : str(quoteAuthor), "sender" : str(quoteSender), "time" : str(time), "day" : str(today), "url" : str(jumpURL)})
-    no += 1
     
     #print to console
     log.info(f"Added quote no: {no} to database: \"{quote}\", {quoteAuthor.name} from {quoteSender.name}. `{str(jumpURL)}`")
+    
+    no += 1
     
 
 #? Args0 will be option of edit | args1 will be quote to edit
