@@ -1,0 +1,8 @@
+{
+  "prefix": "\"",
+  "BotToken": "",
+  "ChannelID": "",
+  "mongoClientID": "mongodb://localhost:27017/",
+  "databaseName": "QuoteBot",
+  "collectionName": "quotes"
+}
