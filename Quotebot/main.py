@@ -20,7 +20,8 @@ log.basicConfig(level=log.INFO)
 
 # Format the logs
 logFormat = log.Formatter(
-    '%(asctime)s - %(levelname)s - %(filename)s::%(funcName)s - %(message)s')
+    "%(asctime)s - %(levelname)s - %(filename)s::%(funcName)s - %(message)s"
+)
 rootLogger = log.getLogger()
 
 # Handle the logs into a file
@@ -41,7 +42,8 @@ intents.message_content = True
 
 # Loads Bot
 bot = commands.Bot(
-    command_prefix=settings["prefix"], intents=intents, help_command=None)
+    command_prefix=settings["prefix"], intents=intents, help_command=None
+)
 
 # Loads db
 myclient: pymongo.MongoClient = pymongo.MongoClient(settings["mongoClientID"])
@@ -58,7 +60,8 @@ for doc in mycol.find({}, {"_id": 1}).sort("_id", -1).limit(1):
 async def on_ready():
     global no
     log.info(
-        f'{bot.user} is connected and has the db of: {str(str(mydb).split(" ")[-1:])[2:-3]} with collection: {str(str(mycol).split(" ")[-1:])[2:-3]}')
+        f'{bot.user} is connected and has the db of: {str(str(mydb).split(" ")[-1:])[2:-3]} with collection: {str(str(mycol).split(" ")[-1:])[2:-3]}'
+    )
     log.info(f"Initalized quote number: {no}")
 
 
@@ -75,7 +78,7 @@ async def on_message(message: discord.Message):
 
     # Check of the message is in the channel we are looking for
     channelWatch = settings["ChannelID"]
-    if (str(message.channel.id) != channelWatch):
+    if str(message.channel.id) != channelWatch:
         return
 
     # Check if the message is from the bot
@@ -86,9 +89,13 @@ async def on_message(message: discord.Message):
     authorList: list = message.mentions
     if len(authorList) > 1 or len(authorList) == 0:
         await message.delete()
-        await message.channel.send(f"Error: Please only specify one author for this quote at this time we found {len(authorList)}: {[user.name for user in authorList]} in quote: {message.content}.", delete_after=60)
+        await message.channel.send(
+            f"Error: Please only specify one author for this quote at this time we found {len(authorList)}: {[user.name for user in authorList]} in quote: {message.content}.",
+            delete_after=60,
+        )
         log.warning(
-            f"{message.author} tried to add a quote with {len(authorList)} authors: {[user.name for user in authorList]} and content: {message.content}")
+            f"{message.author} tried to add a quote with {len(authorList)} authors: {[user.name for user in authorList]} and content: {message.content}"
+        )
         return
     quoteAuthor: discord.Member = authorList[0]
     quoteSender: discord.User | discord.Member = message.author
@@ -102,9 +109,13 @@ async def on_message(message: discord.Message):
     quote: str = " ".join(quoteContent[:-1])
     if quoteContent[-1] != authorMentionString:
         await message.delete()
-        await message.channel.send(f"Error: Please make sure to mention the author at the end of the quote For example: {quote} @citation.", delete_after=60)
+        await message.channel.send(
+            f"Error: Please make sure to mention the author at the end of the quote For example: {quote} @citation.",
+            delete_after=60,
+        )
         log.warning(
-            f"{message.author} tried to add a quote without mentioning the author at the end of the quote: {quote}")
+            f"{message.author} tried to add a quote without mentioning the author at the end of the quote: {quote}"
+        )
         return
 
     # Get's current year for citationå
@@ -114,11 +125,20 @@ async def on_message(message: discord.Message):
     year: int = today.year
 
     # Sanitize the quote to prevent * from messing up the formatting
-    sanitizedQuote = quote.replace("*", '\\*')
+    sanitizedQuote = quote.replace("*", "\\*")
 
     # Sends formatted message & cleans up
-    fullQuote = str(no) + ": "'***"' + sanitizedQuote + '"' + \
-        ".*** `(`" + authorMentionString + "`, "+str(year)+")`"
+    fullQuote = (
+        str(no) + ": "
+        '***"'
+        + sanitizedQuote
+        + '"'
+        + ".*** `(`"
+        + authorMentionString
+        + "`, "
+        + str(year)
+        + ")`"
+    )
     quote_message = await message.channel.send(fullQuote)
     jumpURL: str = quote_message.jump_url
     await message.delete()
@@ -126,12 +146,22 @@ async def on_message(message: discord.Message):
     await message.channel.send("\u3164")
 
     # Write to Database
-    mycol.insert_one({"_id": no, "quote": quote, "author": str(quoteAuthor), "sender": str(
-        quoteSender), "time": str(time), "day": str(today), "url": str(jumpURL)})
+    mycol.insert_one(
+        {
+            "_id": no,
+            "quote": quote,
+            "author": str(quoteAuthor),
+            "sender": str(quoteSender),
+            "time": str(time),
+            "day": str(today),
+            "url": str(jumpURL),
+        }
+    )
 
     # print to console
     log.info(
-        f"Added quote no: {no} to database: \"{quote}\", {quoteAuthor.name} from {quoteSender.name}. `{str(jumpURL)}`")
+        f'Added quote no: {no} to database: "{quote}", {quoteAuthor.name} from {quoteSender.name}. `{str(jumpURL)}`'
+    )
 
     no += 1
 
@@ -141,7 +171,10 @@ async def on_message(message: discord.Message):
 async def edit(ctx, *args):
     if len(args) == 0:
         await ctx.message.delete()
-        await ctx.send("Error: No arguments supplied. The current available options are: |author|, |quote|.", delete_after=5)
+        await ctx.send(
+            "Error: No arguments supplied. The current available options are: |author|, |quote|.",
+            delete_after=5,
+        )
         return
 
     if args[0] == "author":
@@ -152,7 +185,9 @@ async def edit(ctx, *args):
         log.info(f"Quote edit: {args[1]}")
     else:
         await ctx.message.delete()
-        await ctx.send("Error: That is not a current valid editing opiton", delete_after=5)
+        await ctx.send(
+            "Error: That is not a current valid editing opiton", delete_after=5
+        )
 
 
 @bot.command(name="p", help="Set the prefix of quote")
@@ -191,7 +226,9 @@ async def prefixSetting(ctx, *args):
 async def channelChange(ctx, *args):
     if len(args) != 1:
         await ctx.message.delete()
-        await ctx.send("Error: please tag only one channel that will be the quote channel.")
+        await ctx.send(
+            "Error: please tag only one channel that will be the quote channel."
+        )
 
     if args[0][0] != ctx.message.channel.mention[0]:
         await ctx.message.delete()
@@ -213,5 +250,6 @@ async def channelChange(ctx, *args):
 
     await ctx.send(f"Updated the listening channel to {args[0]}!", delete_after=60)
     log.info(f"Updated the listening channel to {args[0]}!")
+
 
 bot.run(settings["BotToken"])
