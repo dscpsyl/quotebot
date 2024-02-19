@@ -3,8 +3,9 @@
 import discord
 import json
 import pymongo
-import os
+import sys
 import logging as log
+from pathlib import Path
 
 from discord.ext import commands
 from datetime import date, datetime
@@ -16,6 +17,22 @@ with open("settings.json", "r") as settingsFile:
     
 #Logging
 log.basicConfig(level=log.INFO)
+
+#Format the logs
+logFormat = log.Formatter('%(asctime)s - %(levelname)s - %(filename)s::%(funcName)s - %(message)s')
+rootLogger = log.getLogger()
+
+#Handle the logs into a file
+logFile = f"logs/quotebot-{datetime.now().strftime('%d-%m-%Y-%H-%M-%S')}.log"
+Path(logFile).touch(exist_ok=True)
+fileLogger = log.FileHandler(logFile)
+fileLogger.setFormatter(logFormat)
+rootLogger.addHandler(fileLogger)
+
+#Handle the logs into the console
+consoleLogger = log.StreamHandler(sys.stdout)
+consoleLogger.setFormatter(logFormat)
+rootLogger.addHandler(consoleLogger)
     
 # Set the premissions for the bot
 intents: discord.Intents = discord.Intents.default()
