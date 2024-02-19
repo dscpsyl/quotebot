@@ -65,7 +65,7 @@ async def on_message(message: discord.Message):
     authorList: list = message.mentions
     if len(authorList) > 1 or len(authorList) == 0:
         await message.delete()
-        await message.channel.send(f"Error: Please only specify one author for this quote at this time we found {len(authorList)}: {[user.name for user in authorList]} .", delete_after=30)
+        await message.channel.send(f"Error: Please only specify one author for this quote at this time we found {len(authorList)}: {[user.name for user in authorList]} in quote: {message.content}.", delete_after=60)
         log.warning(f"{message.author} tried to add a quote with {len(authorList)} authors: {[user.name for user in authorList]} and content: {message.content}")
         return
     quoteAuthor: discord.Member = authorList[0]
@@ -77,13 +77,12 @@ async def on_message(message: discord.Message):
     # Get the content of the message and make sure the citation is at the end of the message
     quoteContent: str | list = message.content
     quoteContent = quoteContent.split(" ")
+    quote: str = " ".join(quoteContent[:-1])
     if quoteContent[-1] != authorMentionString:
         await message.delete()
-        await message.channel.send(f"Error: Please make sure to mention the author at the end of the quote.", delete_after=30)
-        log.warning(f"{message.author} tried to add a quote without mentioning the author at the end of the quote: {quoteContent}")
+        await message.channel.send(f"Error: Please make sure to mention the author at the end of the quote For example: {quote} @citation.", delete_after=60)
+        log.warning(f"{message.author} tried to add a quote without mentioning the author at the end of the quote: {quote}")
         return
-    
-    quote: str = " ".join(quoteContent[:-1])
     
     #Get's current year for citationå
     today: date = date.today()
