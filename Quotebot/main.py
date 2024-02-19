@@ -21,8 +21,7 @@ log.basicConfig(level=log.INFO)
 
 # Format the logs
 logFormat = log.Formatter(
-    "%(asctime)s - %(levelname)s - %(filename)s::%(funcName)s - %(message)s"
-)
+    "%(asctime)s - %(levelname)s - %(filename)s::%(funcName)s - %(message)s")
 rootLogger = log.getLogger()
 
 # Handle the logs into a file
@@ -42,9 +41,9 @@ intents: discord.Intents = discord.Intents.default()
 intents.message_content = True
 
 # Loads Bot
-bot = commands.Bot(
-    command_prefix=settings["prefix"], intents=intents, help_command=None
-)
+bot = commands.Bot(command_prefix=settings["prefix"],
+                   intents=intents,
+                   help_command=None)
 
 # Loads db
 myclient: pymongo.MongoClient = pymongo.MongoClient(settings["mongoClientID"])
@@ -129,17 +128,9 @@ async def on_message(message: discord.Message):
     sanitizedQuote = quote.replace("*", "\\*")
 
     # Sends formatted message & cleans up
-    fullQuote = (
-        str(no) + ": "
-        '***"'
-        + sanitizedQuote
-        + '"'
-        + ".*** `(`"
-        + authorMentionString
-        + "`, "
-        + str(year)
-        + ")`"
-    )
+    fullQuote = (str(no) + ": "
+                 '***"' + sanitizedQuote + '"' + ".*** `(`" +
+                 authorMentionString + "`, " + str(year) + ")`")
     quote_message = await message.channel.send(fullQuote)
     jumpURL: str = quote_message.jump_url
     await message.delete()
@@ -147,17 +138,15 @@ async def on_message(message: discord.Message):
     await message.channel.send("\u3164")
 
     # Write to Database
-    mycol.insert_one(
-        {
-            "_id": no,
-            "quote": quote,
-            "author": str(quoteAuthor),
-            "sender": str(quoteSender),
-            "time": str(time),
-            "day": str(today),
-            "url": str(jumpURL),
-        }
-    )
+    mycol.insert_one({
+        "_id": no,
+        "quote": quote,
+        "author": str(quoteAuthor),
+        "sender": str(quoteSender),
+        "time": str(time),
+        "day": str(today),
+        "url": str(jumpURL),
+    })
 
     # print to console
     log.info(
@@ -186,9 +175,8 @@ async def edit(ctx, *args):
         log.info(f"Quote edit: {args[1]}")
     else:
         await ctx.message.delete()
-        await ctx.send(
-            "Error: That is not a current valid editing opiton", delete_after=5
-        )
+        await ctx.send("Error: That is not a current valid editing opiton",
+                       delete_after=5)
 
 
 @bot.command(name="p", help="Set the prefix of quote")
@@ -249,7 +237,8 @@ async def channelChange(ctx, *args):
     if str(ctx.message.channel.id) == newChannelID:
         await ctx.message.delete()
 
-    await ctx.send(f"Updated the listening channel to {args[0]}!", delete_after=60)
+    await ctx.send(f"Updated the listening channel to {args[0]}!",
+                   delete_after=60)
     log.info(f"Updated the listening channel to {args[0]}!")
 
 
