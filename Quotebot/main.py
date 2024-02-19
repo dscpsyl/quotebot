@@ -8,14 +8,16 @@ from discord.ext import commands
 from datetime import date, datetime
 from eedit import *
 
-from pymongo.message import delete
-
 #Loads Settings
 with open("settings.json", "r") as settingsFile:
     settings = json.load(settingsFile)
+    
+# Set the premissions for the bot
+intents = discord.Intents.default()
+intents.message_content = True
 
 #Loads Bot
-bot = commands.Bot(command_prefix=settings["prefix"])
+bot = commands.Bot(command_prefix=settings["prefix"], intents=intents, help_command=None)
 
 #Loads db
 myclient = pymongo.MongoClient(settings["mongoClientID"])
@@ -29,6 +31,7 @@ for doc in mycol.find({}, {"_id":1}).sort("_id", -1).limit(1):
 async def on_ready():
     print(f'{bot.user} is connected and has the db of: {str(str(mydb).split(" ")[-1:])[2:-3]} with collection: {str(str(mycol).split(" ")[-1:])[2:-3]}')
     print(f"Initalized no: {no}")
+    
 
 @bot.command(name="q", help="Quote's the message you sent")
 async def quote(ctx):
