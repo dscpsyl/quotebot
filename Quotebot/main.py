@@ -89,9 +89,12 @@ async def on_message(message: discord.Message):
     time: datetime | str = datetime.now()
     time = time.strftime("%H:%M:%S")
     year: int = today.year
+    
+    # Sanitize the quote to prevent * from messing up the formatting
+    sanitizedQuote = quote.replace("*", '\\*')
 
     # Sends formatted message & cleans up
-    fullQuote = str(no) + ": "'***"'+ quote +'"'+".*** `(`"+ authorMentionString +"`, "+str(year)+")`"
+    fullQuote = str(no) + ": "'***"'+ sanitizedQuote +'"'+".*** `(`"+ authorMentionString +"`, "+str(year)+")`"
     quote_message = await message.channel.send(fullQuote)
     jumpURL: str = quote_message.jump_url
     await message.delete()
