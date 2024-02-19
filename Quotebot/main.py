@@ -136,27 +136,52 @@ async def prefixSetting(ctx, *args):
         await ctx.send("Error: Please input only one prefix")
         return
 
-    if args[0] != "":
-        bot.command_prefix = args[0]
-        await ctx.send(f"Updated prefix to {args[0]}!", delete_after=5)
+    if args[0] == "":
+        await ctx.message.delete()
+        await ctx.send("Error: Please input a valid prefix")
+        return
+    
+    # Keep the quote channel clean
+    if str(ctx.message.channel.id) == settings["ChannelID"]:
+        await ctx.message.delete()
         
-        with open("settings.json", "r+") as settingsFile:
-            settingsData = json.load(settingsFile)
-            settingsData["prefix"] = str(args[0])
-            settingsFile.seek(0)
-            json.dump(settingsData,settingsFile, indent=4)
-            settingsFile.truncate()
         
-#!Not Functional
-@bot.command(name="o", help="Initial Setup when the bot joins")
-async def setUp(ctx):
-    pass
-    #create quotebook channel if it doens't exist and rememebr channel id in settings
+    bot.command_prefix = args[0]
+    await ctx.send(f"Updated prefix to {args[0]}!", delete_after=60)
+    log.info(f"Updated prefix to {args[0]}!")
+    
+    with open("settings.json", "r+") as settingsFile:
+        settingsData = json.load(settingsFile)
+        settingsData["prefix"] = str(args[0])
+        settingsFile.seek(0)
+        json.dump(settingsData,settingsFile, indent=4)
+        settingsFile.truncate()
 
-#!Not Functional
-@bot.command(name="s", help="Searches through database for old quotes")
-async def formatSetting(ctx):
-    pass
-    #search database
+@bot.command(name="c", help="Change the channel that the quotebot listens in")
+async def channelChange(ctx, *args):
+    if len(args) != 1:
+        await ctx.message.delete()
+        await ctx.send("Error: please tag only one channel that will be the quote channel.")    
+    
+    if args[0][0] != ctx.message.channel.mention[0]:
+        await ctx.message.delete()
+        await ctx.send("Error: Please tag the channel with the # symbol.")
+        return
+    
+    # Get the channel ID from the arg
+    newChannelID = str(args[0][2:-1])
+    settings["ChannelID"] = newChannelID
+    
+    with open("settings.json", "w") as settingsFile:
+        settingsFile.seek(0)
+        json.dump(settings, settingsFile, indent=4)
+        settingsFile.truncate()
+    
+    # Keep the quote channel clean
+    if str(ctx.message.channel.id) == newChannelID:
+        await ctx.message.delete()
+    
+    await ctx.send(f"Updated the listening channel to {args[0]}!", delete_after=60)
+    log.info(f"Updated the listening channel to {args[0]}!")
 
 bot.run(settings["BotToken"])
