@@ -46,8 +46,8 @@ bot = commands.Bot(command_prefix=settings["prefix"],
                    help_command=None)
 
 # Loads db
-myclient: pymongo.MongoClient = pymongo.MongoClient(settings["mongoClientID"])
-mydb = myclient[settings["databaseName"]]
+myclient: pymongo.MongoClient = pymongo.MongoClient(settings["mongoClientID"] + settings["databaseName"])
+mydb = myclient.get_default_database()
 mycol = mydb[settings["collectionName"]]
 
 # Set the quote number to the last quote number in the database
